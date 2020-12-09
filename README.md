@@ -7,7 +7,9 @@ Team members: Xin Huang, Xinyue Chen, Tzuyi Li, Wanying Li, Ziling Wan, Szufan C
   
 ## Approach
 Correlation Plot
+
 Decision Tree 
+
 Logistic Regression
 
 ## Dataset
