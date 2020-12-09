@@ -12,9 +12,12 @@ Logistic Regression
 
 ## Dataset
 
-From following link:
-https://www.kaggle.com/uciml/student-alcohol-consumption
+From following link: https://www.kaggle.com/uciml/student-alcohol-consumption
 
-Also available in this repository, file named "student.csv"
+Also available in this repository, file named "student-mat.csv"
+
+
+
+
 
   
