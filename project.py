@@ -125,10 +125,10 @@ def plot_corr_btw_walc_n_dalc(df):
     Therefore, we chose to keep both variables.
     '''
     fname = 'walc & dalc.png'
-    destination = os.path.join(os.getcwd() + '/grapihcs/', fname)
+    destination = os.path.join(PATH, fname)
 
     print('(2) Save ' + fname + ': correlation between walc and dalc\n')\
-
+    
     # Bar charts of Walc & Dalc
     plt.rc('figure', figsize=(10, 5))
     fig = plt.figure()
