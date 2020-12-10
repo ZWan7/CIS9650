@@ -31,7 +31,7 @@ PREDICTORS = ['Medu', 'Fedu', 'traveltime', 'studytime', 'failures', 'famrel',
 'schoolsup_yes', 'famsup_yes', 'paid_yes', 'activities_yes',
 'nursery_yes', 'higher_yes', 'internet_yes', 'romantic_yes']
 
-PATH = os.getcwd() + '/grapihcs/'
+PATH = os.getcwd() + '/graphics/'
 if not os.path.exists(PATH):
     os.mkdir(PATH)
 
