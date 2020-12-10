@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pylab as plt
@@ -6,9 +7,9 @@ import statsmodels.api as sm
 
 from sklearn.linear_model import LogisticRegression, LogisticRegressionCV, Lasso, Ridge, LassoCV, BayesianRidge
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.ensemble import RandomForestClassifier
-from dmba import plotDecisionTree, classificationSummary, regressionSummary
+from dmba import classificationSummary, regressionSummary
 from sklearn.ensemble import RandomForestClassifier
 
 from dmba import classificationSummary, gainsChart, liftChart
@@ -29,6 +30,10 @@ PREDICTORS = ['Medu', 'Fedu', 'traveltime', 'studytime', 'failures', 'famrel',
 'reason_reputation', 'guardian_mother', 'guardian_other',
 'schoolsup_yes', 'famsup_yes', 'paid_yes', 'activities_yes',
 'nursery_yes', 'higher_yes', 'internet_yes', 'romantic_yes']
+
+PATH = os.getcwd() + '/grapihcs/'
+if not os.path.exists(PATH):
+    os.mkdir(PATH)
 
 def clean_data(fname):
     '''
@@ -55,7 +60,8 @@ def clean_data(fname):
     return df
 
 def plot_corr_heatmap(df):
-    fname = 'corr_heatmap.png'
+    fname = 'heatmap.png'
+    destination = os.path.join(PATH, fname)
     print('(0) Save ' + fname + ': correlation heatmap\n')\
     # Compute the correlation matrix
     corr = df.corr()
@@ -69,7 +75,7 @@ def plot_corr_heatmap(df):
     _heat_map = sns.heatmap(corr, mask=mask, cmap=cmap, vmax=.5, vmin=-.5,center=0, annot = True,
                 square=True, linewidths=.5, cbar_kws={'shrink': .8})
 
-    plt.savefig(fname)
+    plt.savefig(destination)
 
 def plot_corr_btw_fedu_n_medu(df):
     '''
@@ -80,7 +86,9 @@ def plot_corr_btw_fedu_n_medu(df):
     Most father's education were 2, while mothers tended to have higher education level.
     Therefore, we choose to keep both FEdu and MEdu.
     '''
-    fname = 'corr_btw_fedu_n_medu.png'
+    fname = 'fedu & medu.png.png'
+    destination = os.path.join(PATH, fname)
+
     print('(1) Save ' + fname + ': correlation between FEdu and Medu\n')\
 
     # Bar charts of FEdu & Medu
@@ -104,7 +112,7 @@ def plot_corr_btw_fedu_n_medu(df):
     plt.xlabel('Medu')
     ax2.bar(medu.index, medu['Medu'], color = 'pink')
 
-    plt.savefig(fname)
+    plt.savefig(destination)
 
 def plot_corr_btw_walc_n_dalc(df):
     '''
@@ -116,7 +124,9 @@ def plot_corr_btw_walc_n_dalc(df):
     After level 2, the Dalc dropped dramatically than Walc.
     Therefore, we chose to keep both variables.
     '''
-    fname = 'corr_btw_walc_n_dalc.png'
+    fname = 'walc & dalc.png'
+    destination = os.path.join(os.getcwd() + '/grapihcs/', fname)
+
     print('(2) Save ' + fname + ': correlation between walc and dalc\n')\
 
     # Bar charts of Walc & Dalc
@@ -138,7 +148,7 @@ def plot_corr_btw_walc_n_dalc(df):
     plt.xlabel('Dalc')
     ax2.bar(dalc.index, dalc['Dalc'], color = 'indianred')
 
-    plt.savefig(fname)
+    plt.savefig(destination)
 
 def plot_corr_among_grades(df):
     '''
@@ -149,7 +159,9 @@ def plot_corr_among_grades(df):
     However, more students got 0 in G2 and G3, while G1 had fewer students with 0 points.
     The 3 grades distributions were different, so we chose to keep all of them.
     '''
-    fname = 'corr_among_grades.png'
+    fname = 'correlation among grades.png.png'
+    destination = os.path.join(PATH, fname)
+
     print('(3) Save ' + fname + ': correlation among grades: G1, G2, and G3\n')
 
     # Bar charts of G1, G2 and G3
@@ -179,13 +191,15 @@ def plot_corr_among_grades(df):
     plt.xlabel('G3')
     ax3.bar(g3.index, g3['G3'], color = 'mediumaquamarine')
 
-    plt.savefig(fname)
+    plt.savefig(destination)
 
 def plot_corre_btw_medu_n_avg_grade(df):
     '''
     Compute the Medu's counts and the average_grade based on the Medu's groups
     '''
-    fname = 'corr_avg_grade_n_medu.png'
+    fname = 'avg grade & medu.png'
+    destination = os.path.join(PATH, fname)
+
     print('(4) Save ' + fname + ': correlation between Medu and Average Grade\n')
 
     mean_medu = df.groupby('Medu').mean()['average_grade'].values.tolist()
@@ -213,13 +227,15 @@ def plot_corre_btw_medu_n_avg_grade(df):
 
     plt.title('Correlation between Average Grade and Medu')
 
-    plt.savefig(fname)
+    plt.savefig(destination)
 
 def plot_corre_btw_fedu_n_avg_grade(df):
     '''
     Compute the Fedu's counts and the average_grade based on the Fedu's groups
     '''
-    fname = 'corr_btw_avg_grade_n_fedu.png'
+    fname = 'avg grade & fedu.png'
+    destination = os.path.join(PATH, fname)
+
     print('(5) Save ' + fname + ': correlation between Medu and Average Grade\n')
 
     mean_fedu = df.groupby('Fedu').mean()['average_grade'].values.tolist()
@@ -246,10 +262,12 @@ def plot_corre_btw_fedu_n_avg_grade(df):
     ax2.tick_params(axis='y', labelcolor=color)
 
     plt.title('Correlation between Average Grade and Fedu')
-    plt.savefig(fname)
+    plt.savefig(destination)
 
 def plot_corr_study_time_n_avg_grade(df):
-    fname = 'corr_btw_studytime_n_avg_grade.png'
+    fname = 'studytime & avg grade.png'
+    destination = os.path.join(PATH, fname)
+
     print('(6) Save ' + fname + ': correlation between  and Average Grade\n')
 
     mean_studytime = df.groupby('studytime').mean()['average_grade'].values.tolist()
@@ -271,14 +289,15 @@ def plot_corr_study_time_n_avg_grade(df):
 
     plt.title('Correlation between Average Grade and studytime')
 
-    plt.savefig(fname)
+    plt.savefig(destination)
 
 def plot_corr_btw_travel_time_n_avg_grade(df):
     ''''
     Compute the traveltime's counts and the average_grade based on the traveltime's groups
     '''
+    fname = 'travel_time & avg_grade.png'
+    destination = os.path.join(PATH, fname)
 
-    fname = 'corr_btw_travel_time_n_avg_grade.png'
     print('(7) Save ' + fname + ': correlation between Travel Time and Average Grade\n')
 
     mean_traveltime = df.groupby('traveltime').mean()['average_grade'].values.tolist()
@@ -303,7 +322,7 @@ def plot_corr_btw_travel_time_n_avg_grade(df):
 
     plt.title('Correlation between Average Grade and Travel Time')
 
-    plt.savefig(fname)
+    plt.savefig(destination)
 
 def partition_data(df):
     df = pd.get_dummies(df, drop_first=True)
@@ -313,7 +332,7 @@ def partition_data(df):
 
     return train_x, valid_x, train_y, valid_y
 
-def display_logistic_regression(df, train_x, valid_x, train_y, valid_y):
+def display_logistic_regression(train_x, valid_x, train_y, valid_y):
     print('(8) Display logistic regression\n')
     # fit a logistic regression (set penalty=l2 and C=1e42 to avoid regularization)
     logit_reg = LogisticRegression(penalty='l2', C=1e42, solver='liblinear')
@@ -337,9 +356,17 @@ def display_logistic_regression(df, train_x, valid_x, train_y, valid_y):
 
 def display_decision_tree(train_x, valid_x, train_y, valid_y):
     print('(9) Display Decision Tree\n')
+
+    fname = 'decision tree.png'
+    destination = os.path.join(PATH, fname)
+
     fullClassTree = DecisionTreeClassifier(max_depth=4, random_state = 1)
     fullClassTree.fit(train_x, train_y)
-    plotDecisionTree(fullClassTree, feature_names=train_x.columns)
+
+    plt.figure()
+    plot_tree(fullClassTree)
+    plt.savefig(destination)
+
 
     prediction_train = fullClassTree.predict(train_x)#use the DT model to predict on the training data
     prediction_valid = fullClassTree.predict(valid_x)#use the DT model to predict on the validation data
@@ -370,7 +397,7 @@ def main():
     plot_corre_btw_fedu_n_avg_grade(df)
     plot_corr_btw_travel_time_n_avg_grade(df)
 
-    display_logistic_regression(df, train_x, valid_x, train_y, valid_y)
+    display_logistic_regression(train_x, valid_x, train_y, valid_y)
     display_decision_tree(train_x, valid_x, train_y, valid_y)
 
 if __name__ == '__main__':
